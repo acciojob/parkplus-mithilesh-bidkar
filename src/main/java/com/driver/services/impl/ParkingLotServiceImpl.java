@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingLotServiceImpl implements ParkingLotService {
@@ -61,6 +62,16 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public void deleteSpot(int spotId) {
+
+        Optional<Spot> spot = spotRepository1.findById(spotId);
+
+        if(spot.isEmpty()){
+            return;
+        }
+
+        ParkingLot parkingLot = spot.get().getParkingLot();
+
+        parkingLot.getSpots().remove(spot.get());
 
         spotRepository1.deleteById(spotId);
 
