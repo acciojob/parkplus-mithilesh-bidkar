@@ -1,6 +1,6 @@
 package com.driver.services.impl;
 
-import com.driver.Enum.SpotType;
+import com.driver.model.SpotType;
 import com.driver.model.ParkingLot;
 import com.driver.model.Spot;
 import com.driver.repository.ParkingLotRepository;
@@ -51,7 +51,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         Spot savedSpot = spotRepository1.save(newSpot);
 
-        parkingLot.getSpots().add(savedSpot);
+        parkingLot.getSpotList().add(savedSpot);
 
         parkingLotRepository1.save(parkingLot);
 
@@ -71,7 +71,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         ParkingLot parkingLot = spot.get().getParkingLot();
 
-        parkingLot.getSpots().remove(spot.get());
+        parkingLot.getSpotList().remove(spot.get());
 
         spotRepository1.deleteById(spotId);
 
@@ -85,7 +85,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         Spot updatedSpot = null;
 
-        for(Spot spot : parkingLot.getSpots()){
+        for(Spot spot : parkingLot.getSpotList()){
 
             if(spot.getId() == spotId){
                 updatedSpot = spot;
@@ -105,7 +105,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         ParkingLot deleteparkingLot = parkingLotRepository1.findById(parkingLotId).get();
 
-        List<Spot> spotList = deleteparkingLot.getSpots();
+        List<Spot> spotList = deleteparkingLot.getSpotList();
 
         for(Spot spot : spotList){
 

@@ -1,6 +1,6 @@
 package com.driver.services.impl;
 
-import com.driver.Enum.SpotType;
+import com.driver.model.SpotType;
 import com.driver.exception.ParkingLotNotFoundExcception;
 import com.driver.exception.SpotNotAvailableException;
 import com.driver.exception.userNotFoundException;
@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Spot requiredSpot = null;
 
-        List<Spot> spotList = parkingLot.get().getSpots();
+        List<Spot> spotList = parkingLot.get().getSpotList();
 
         for(Spot spot : spotList){
 
@@ -66,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
                 thisSpotWheels = 24;
             }
 
-            if(spot.isOccupied() == false &&  numberOfWheels <= thisSpotWheels  ){
+            if(spot.getOccupied() == false &&  numberOfWheels <= thisSpotWheels  ){
 
                 if(minimumCost>spot.getPricePerHour()*timeInHours){
                     minimumCost = spot.getPricePerHour()*timeInHours;
@@ -91,7 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation savedReservation = reservationRepository3.save(reservation);
 
-        requiredSpot.getReservations().add(savedReservation);
+        requiredSpot.getReservationList().add(savedReservation);
 
         spotRepository3.save(requiredSpot);
         user.get().getReservations().add(savedReservation);
