@@ -18,11 +18,13 @@ public class PaymentServiceImpl implements PaymentService {
     PaymentRepository paymentRepository2;
 
     @Override
-    public Payment pay(Integer reservationId, int amountSent, String mode) throws Exception {
+    public Payment pay(Integer reservationId, int amountSent, String mode)  {
 
         Reservation reservation = reservationRepository2.findById(reservationId).get();
 
         int bill = reservation.getNumberOfHours()*reservation.getSpot().getPricePerHour();
+
+
 
         if(bill > amountSent){
 
@@ -41,7 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
         } else if (paymentMode.equals("UPI")) {
             payment.setPaymentMode(PaymentMode.UPI);
         }else {
-            throw new RuntimeException("Payment mode not detected ");
+            throw new RuntimeException("Payment mode not detected");
         }
 
         payment.setReservation(reservation);
