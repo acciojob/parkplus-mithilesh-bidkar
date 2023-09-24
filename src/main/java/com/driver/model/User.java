@@ -20,7 +20,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Reservation> reservationList = new ArrayList<>();
+    List<Reservation> reservationList = new ArrayList<>();
 
 
     public User() {

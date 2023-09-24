@@ -34,18 +34,17 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = new Payment();
         payment.setPaymentCompleted(true);
 
-        String paymentMode = mode.toUpperCase();
-
-        if(paymentMode.equals("CARD")){
-            payment.setPaymentMode(PaymentMode.CARD);
-        }else if(paymentMode.equals("CASH")){
-            payment.setPaymentMode(PaymentMode.CASH);
-        } else if (paymentMode.equals("UPI")) {
-            payment.setPaymentMode(PaymentMode.UPI);
+        PaymentMode paymentMode=null;
+        if(mode.toUpperCase().equals(PaymentMode.CASH.toString())){
+            paymentMode=PaymentMode.CASH;
+        } else if (mode.toUpperCase().equals(PaymentMode.CARD.toString())) {
+            paymentMode=PaymentMode.CARD;
+        } else if (mode.toUpperCase().equals(PaymentMode.UPI.toString())) {
+            paymentMode=PaymentMode.UPI;
         }else {
             throw new RuntimeException("Payment mode not detected");
         }
-
+        payment.setPaymentMode(paymentMode);
         payment.setReservation(reservation);
 
         Payment savedPayment = paymentRepository2.save(payment);

@@ -14,15 +14,15 @@ public class Reservation {
 
 
     @OneToOne(mappedBy = "reservation",cascade = CascadeType.ALL)
-    private Payment payment;
+     Payment payment;
 
     @ManyToOne
     @JoinColumn
-    private User user;
+    User user;
 
     @ManyToOne
     @JoinColumn
-    private Spot spot;
+    Spot spot;
 
     public Reservation() {
     }

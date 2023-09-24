@@ -19,7 +19,7 @@ public class Payment {
 
     @OneToOne
     @JoinColumn
-   private Reservation reservation;
+    Reservation reservation;
 
 
     public Payment() {
