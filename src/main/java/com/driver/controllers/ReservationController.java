@@ -24,7 +24,7 @@ public class ReservationController {
 
             return reservation;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException();
         }
     }
 }
