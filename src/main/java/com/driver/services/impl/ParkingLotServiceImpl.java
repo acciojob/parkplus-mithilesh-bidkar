@@ -1,5 +1,6 @@
 package com.driver.services.impl;
 
+import com.driver.exception.ParkingLotNotFoundExcception;
 import com.driver.model.SpotType;
 import com.driver.model.ParkingLot;
 import com.driver.model.Spot;
@@ -102,9 +103,13 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public void deleteParkingLot(int parkingLotId) {
 
-        ParkingLot deleteparkingLot = parkingLotRepository1.findById(parkingLotId).get();
+        Optional<ParkingLot> deleteparkingLot = parkingLotRepository1.findById(parkingLotId);
 
-        List<Spot> spotList = deleteparkingLot.getSpotList();
+        if(deleteparkingLot.isEmpty()){
+            throw new ParkingLotNotFoundExcception("Parking lot Doesn't exist");
+        }
+
+        List<Spot> spotList = deleteparkingLot.get().getSpotList();
 
         for(Spot spot : spotList){
 
