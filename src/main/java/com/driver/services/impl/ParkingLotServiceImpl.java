@@ -21,103 +21,72 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     SpotRepository spotRepository1;
     @Override
     public ParkingLot addParkingLot(String name, String address) {
-            ParkingLot newParkingLot = new ParkingLot();
-            newParkingLot.setName(name);
-            newParkingLot.setAddress(address);
+        ParkingLot parkingLot =new ParkingLot();
+        parkingLot.setName(name);
+        parkingLot.setAddress(address);
 
-            ParkingLot savedParkingLot = parkingLotRepository1.save(newParkingLot);
-
-            return savedParkingLot;
+        parkingLotRepository1.save(parkingLot);
+        return parkingLot;
     }
 
     @Override
     public Spot addSpot(int parkingLotId, Integer numberOfWheels, Integer pricePerHour) {
+        ParkingLot parkingLot=parkingLotRepository1.findById(parkingLotId).get();
 
-        Spot newSpot = new Spot();
+        Spot spot=new Spot();
+        spot.setPricePerHour(pricePerHour);
+        spot.setOccupied(false);
+        spot.setParkingLot(parkingLot);
 
+        if(numberOfWheels <= 2)
+            spot.setSpotType(SpotType.TWO_WHEELER);
+        else if(numberOfWheels <= 4)
+            spot.setSpotType(SpotType.FOUR_WHEELER);
+        else if(numberOfWheels > 4)
+            spot.setSpotType(SpotType.OTHERS);
 
-        if(numberOfWheels <= 2){
-            newSpot.setSpotType(SpotType.TWO_WHEELER);
-        } else if (numberOfWheels <=4) {
-            newSpot.setSpotType(SpotType.FOUR_WHEELER);
-        }else {
-            newSpot.setSpotType(SpotType.OTHERS);
-        }
+        parkingLot.getSpotList().add(spot);
 
-        newSpot.setPricePerHour(pricePerHour);
-        newSpot.setOccupied(false);
-
-
-        ParkingLot parkingLot = parkingLotRepository1.findById(parkingLotId).get();
-        newSpot.setParkingLot(parkingLot);
-
-        Spot savedSpot = spotRepository1.save(newSpot);
-
-        parkingLot.getSpotList().add(savedSpot);
-
+        //spotRepository1.save(spot);
         parkingLotRepository1.save(parkingLot);
 
-
-        return  savedSpot;
-
+        return spot;
     }
 
     @Override
     public void deleteSpot(int spotId) {
 
-        Optional<Spot> spot = spotRepository1.findById(spotId);
-
-        if(spot.isEmpty()){
+        if(!spotRepository1.existsById(spotId)){
             return;
         }
+        Spot spot=spotRepository1.findById(spotId).get();
+        ParkingLot parkingLot=spot.getParkingLot();
 
-        ParkingLot parkingLot = spot.get().getParkingLot();
-
-        parkingLot.getSpotList().remove(spot.get());
-
-        spotRepository1.deleteById(spotId);
+        parkingLot.getSpotList().remove(spot);
+        spotRepository1.delete(spot);
 
     }
 
     @Override
     public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) {
+        ParkingLot parkingLot=parkingLotRepository1.findById(parkingLotId).get();
 
-        ParkingLot parkingLot = parkingLotRepository1.findById(parkingLotId).get();
+        Spot spot=null;
 
-
-        Spot updatedSpot = null;
-
-        for(Spot spot : parkingLot.getSpotList()){
-
-            if(spot.getId() == spotId){
-                updatedSpot = spot;
+        for(Spot spot1:parkingLot.getSpotList()){
+            if(spot1.getId() == spotId){
+                spot1.setPricePerHour(pricePerHour);
+                spot=spot1;
+                spotRepository1.save(spot1);
+                break;
             }
         }
-
-        updatedSpot.setPricePerHour(pricePerHour);
-
-
-        return spotRepository1.save(updatedSpot);
-
-
+        return spot;
     }
 
     @Override
     public void deleteParkingLot(int parkingLotId) {
-
-        Optional<ParkingLot> deleteparkingLot = parkingLotRepository1.findById(parkingLotId);
-
-        if(deleteparkingLot.isEmpty()){
-            throw new ParkingLotNotFoundExcception("Parking lot Doesn't exist");
-        }
-
-        List<Spot> spotList = deleteparkingLot.get().getSpotList();
-
-        for(Spot spot : spotList){
-
-            spotRepository1.delete(spot);
-        }
-
         parkingLotRepository1.deleteById(parkingLotId);
+
     }
 }
